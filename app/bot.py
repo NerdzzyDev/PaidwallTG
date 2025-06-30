@@ -3,7 +3,7 @@ import logging
 
 from aiogram import Bot, Dispatcher
 
-from app.database.models import init_db_pool
+from app.database.models import init_db  # теперь это SQLite
 from app.handlers import admin, users
 from app.utils.scheduler import setup_scheduler
 from config.config import config
@@ -21,11 +21,11 @@ async def main():
     dp.include_router(admin.router)
     dp.include_router(users.router)
 
-    logger.info("Initializing database pool")
-    bot.pool = await init_db_pool(config)
+    logger.info("Initializing SQLite database")
+    await init_db(config)  # создает таблицы, если нужно
 
     logger.info("Setting up scheduler")
-    setup_scheduler(bot)
+    setup_scheduler(config.db["path"])  # передаём путь к SQLite
 
     logger.info("Starting polling")
     await dp.start_polling(bot)
