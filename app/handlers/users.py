@@ -41,9 +41,9 @@ async def start_command(message: types.Message):
     user = message.from_user
     logger.info("Processing /start for user_id=%s, username=%s", user.id, user.username)
     try:
-        await add_user(message.bot.pool, user.id, user.first_name, user.last_name, None, user.username)
+        await add_user(config.db["path"], user.id, user.first_name, user.last_name, None, user.username)
         logger.info("add_user called for user_id=%s", user.id)
-        user_data = await get_user(message.bot.pool, user.id)
+        user_data = await get_user(config.db["path"], user.id)
         if user_data:
             logger.info(
                 "User retrieved after add: user_id=%s, is_subscribed=%s, expires_at=%s",
@@ -93,7 +93,7 @@ async def start_command(message: types.Message):
 @router.message(F.content_type.in_([ContentType.TEXT, ContentType.PHOTO]))
 async def handle_message(message: types.Message):
     logger.info("Handling message from user_id=%s, content_type=%s", message.from_user.id, message.content_type)
-    user = await get_user(message.bot.pool, message.from_user.id)
+    user = await get_user(config.db["path"], message.from_user.id)
     if user:
         logger.info(
             "User found: user_id=%s, is_subscribed=%s, expires_at=%s",
@@ -105,14 +105,14 @@ async def handle_message(message: types.Message):
         logger.warning("User not found: user_id=%s, attempting to add", message.from_user.id)
         try:
             await add_user(
-                message.bot.pool,
+                config.db["path"],
                 message.from_user.id,
                 message.from_user.first_name,
                 message.from_user.last_name,
                 None,
                 message.from_user.username,
             )
-            user = await get_user(message.bot.pool, message.from_user.id)
+            user = await get_user(config.db["path"], message.from_user.id)
             if user:
                 logger.info("User added and retrieved: user_id=%s", message.from_user.id)
             else:

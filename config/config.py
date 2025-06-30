@@ -7,11 +7,7 @@ class Settings(BaseSettings):
     channel_id: str
     payment_link: str = "https://example.com/payment"
     db: dict = {
-        "host": "db",
-        "port": 5432,
-        "user": "postgres",
-        "password": "your_password",
-        "database": "antow_new_life",
+        "path": "./bot.db"  # SQLite uses file path instead of host/port
     }
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")

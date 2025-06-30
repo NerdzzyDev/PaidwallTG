@@ -25,7 +25,7 @@ async def admin_stats(message: types.Message):
         return
     logger.info("Admin %s requesting statistics", message.from_user.id)
     try:
-        stats = await get_stats(message.bot.pool)
+        stats = await get_stats(config.db["path"])
         response = (
             f"📊 Статистика:\n"
             f"Всего пользователей: {stats['total_users']}\n"
