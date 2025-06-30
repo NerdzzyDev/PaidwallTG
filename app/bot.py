@@ -2,8 +2,8 @@ import asyncio
 import logging
 
 from aiogram import Bot, Dispatcher
+from database.models import init_db  # теперь это SQLite
 
-from app.database.models import init_db  # теперь это SQLite
 from app.handlers import admin, users
 from app.utils.scheduler import setup_scheduler
 from config.config import config
